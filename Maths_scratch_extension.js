@@ -1,3 +1,5 @@
+ScratchExtensions.loadExternalJS("https://aminegm73.github.io/ScratchExtensions/audio_extension.js");
+
 (function(ext) {
     var audio;
     var isPlaying = false;
