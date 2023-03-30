@@ -35,7 +35,7 @@
             ['b', 'audio is playing?', 'isPlaying']
         ],
         menus: {},
-        url: 'https://aminegm73.github.io/ScratchExtensions/Maths_scratch_extension.js'
+        url: 'https://aminegm73.github.io/ScratchExtensions/Audio extension.js'
     };
 
     // Function to handle the selection of an audio file
