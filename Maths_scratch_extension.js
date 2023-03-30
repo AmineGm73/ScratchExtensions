@@ -1,34 +1,62 @@
+ScratchExtensions.loadExternalJS("https://example.com/myExtension.js");
+
 (function(ext) {
-    // Define a custom block called "get atan2" that takes two inputs
-    ext.getAtan2 = function(y, x) {
-        return Math.atan2(y, x) * 180 / Math.PI;
+    var audio;
+    var isPlaying = false;
+    
+    // Function to play the selected audio file
+    ext.playAudio = function(filename) {
+        if (audio) {
+            audio.pause();
+        }
+        audio = new Audio(filename);
+        audio.play();
+        isPlaying = true;
     };
-
-    // Define a custom block called "lerp" that takes three inputs
-    ext.lerp = function(a, b, t) {
-        return a + (b - a) * t;
+    
+    // Function to stop the currently playing audio file
+    ext.stopAudio = function() {
+        if (audio) {
+            audio.pause();
+        }
+        isPlaying = false;
     };
-
-    // Describe the extension's blocks, menus, and other properties
+    
+    // Function to check if the audio file is currently playing
+    ext.isPlaying = function() {
+        return isPlaying;
+    };
+    
+    // Block and block menu descriptions
     var descriptor = {
-        // Define the extension's ID and name
-        id: 'mathExtension',
-        name: 'Math Extension',
-
-        // Define the extension's input types
         blocks: [
-            // Define the "get atan2" block with two number inputs
-            ['r', 'atan2 of y: %n x: %n', 'getAtan2', 0, 0],
-
-            
-
-            // Define the "lerp" block with three number inputs
-            ['r', 'lerp from %n to %n with t %n', 'lerp', 0, 1, 0.5]
-        ]
+            [' ', 'select audio file', 'selectAudio'],
+            [' ', 'play selected audio', 'playAudio'],
+            [' ', 'stop playing audio', 'stopAudio'],
+            ['b', 'audio is playing?', 'isPlaying']
+        ],
         menus: {},
-        colour: '#FF8C00'
+        url: 'https://example.com/myExtension.js'
     };
-
-    // Register the extension with Scratch
-    ScratchExtensions.register('MathExtension', descriptor, ext);
+    
+    // Function to handle the selection of an audio file
+    ext.selectAudio = function(callback) {
+        var fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'audio/*';
+        fileInput.onchange = function(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function() {
+                    callback(reader.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        fileInput.click();
+    };
+    
+    // Register the extension
+    ScratchExtensions.register('Audio extension', descriptor, ext);
 })({});
