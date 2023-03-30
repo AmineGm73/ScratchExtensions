@@ -18,13 +18,17 @@
         // Define the extension's input types
         blocks: [
             // Define the "get atan2" block with two number inputs
-            ['r', 'get atan2 of y: %n x: %n', 'getAtan2', 0, 0],
+            ['r', 'atan2 of y: %n x: %n', 'getAtan2', 0, 0],
+
+            
 
             // Define the "lerp" block with three number inputs
             ['r', 'lerp from %n to %n with t %n', 'lerp', 0, 1, 0.5]
         ]
+        menus: {},
+        colour: '#FF8C00'
     };
 
     // Register the extension with Scratch
-    ScratchExtensions.register('mathExtension', descriptor, ext);
+    ScratchExtensions.register('MathExtension', descriptor, ext);
 })({});
