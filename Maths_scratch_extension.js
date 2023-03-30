@@ -1,4 +1,4 @@
-ScratchExtensions.loadExternalJS("https://example.com/myExtension.js");
+ScratchExtensions.loadExternalJS("https://aminegm73.github.io/ScratchExtensions/Maths_scratch_extension.js");
 
 (function(ext) {
     var audio;
