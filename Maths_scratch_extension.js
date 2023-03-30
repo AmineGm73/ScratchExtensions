@@ -1,9 +1,9 @@
-ScratchExtensions.loadExternalJS("https://aminegm73.github.io/ScratchExtensions/audio_extension.js");
+ScratchExtensions.loadExternalJS("https://aminegm73.github.io/ScratchExtensions/Maths_scratch_extension.js");
 
 (function(ext) {
     var audio;
     var isPlaying = false;
-    
+
     // Function to play the selected audio file
     ext.playAudio = function(filename) {
         if (audio) {
@@ -13,7 +13,7 @@ ScratchExtensions.loadExternalJS("https://aminegm73.github.io/ScratchExtensions/
         audio.play();
         isPlaying = true;
     };
-    
+
     // Function to stop the currently playing audio file
     ext.stopAudio = function() {
         if (audio) {
@@ -21,12 +21,12 @@ ScratchExtensions.loadExternalJS("https://aminegm73.github.io/ScratchExtensions/
         }
         isPlaying = false;
     };
-    
+
     // Function to check if the audio file is currently playing
     ext.isPlaying = function() {
         return isPlaying;
     };
-    
+
     // Block and block menu descriptions
     var descriptor = {
         blocks: [
@@ -36,9 +36,9 @@ ScratchExtensions.loadExternalJS("https://aminegm73.github.io/ScratchExtensions/
             ['b', 'audio is playing?', 'isPlaying']
         ],
         menus: {},
-        url: 'https://example.com/myExtension.js'
+        url: 'https://aminegm73.github.io/ScratchExtensions/Maths_scratch_extension.js'
     };
-    
+
     // Function to handle the selection of an audio file
     ext.selectAudio = function(callback) {
         var fileInput = document.createElement('input');
@@ -56,7 +56,8 @@ ScratchExtensions.loadExternalJS("https://aminegm73.github.io/ScratchExtensions/
         };
         fileInput.click();
     };
-    
+
     // Register the extension
     ScratchExtensions.register('Audio extension', descriptor, ext);
 })({});
+
