@@ -6,6 +6,8 @@
             this.x = x;
             this.y = y;
             this.radius = radius;
+            this.knobX = x;
+            this.knobY = y;
             this.direction = 0;
             this.distance = 0;
         }
@@ -15,9 +17,21 @@
             const deltaY = y - this.y;
             this.distance = Math.min(1, Math.sqrt(deltaX * deltaX + deltaY * deltaY) / this.radius);
             this.direction = (Math.atan2(deltaY, deltaX) * 180 / Math.PI + 360) % 360;
+
+            // Update knob position
+            this.knobX = x;
+            this.knobY = y;
+            const knobDistance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            if (knobDistance > this.radius) {
+                const scale = this.radius / knobDistance;
+                this.knobX = this.x + deltaX * scale;
+                this.knobY = this.y + deltaY * scale;
+            }
         }
 
         reset() {
+            this.knobX = this.x;
+            this.knobY = this.y;
             this.distance = 0;
             this.direction = 0;
         }
@@ -64,7 +78,9 @@
         ext.penColor('black');
         ext.penSize(2);
         ext.penDown();
-        ext.penStamp();
+        ext.penCircle(joystick.x, joystick.y, joystick.radius);
+        ext.penUp();
+        ext.penCircle(joystick.x, joystick.y, 5);
     };
 
     ext.getJoystickDistance = function() {
@@ -72,11 +88,11 @@
     };
 
     ext.getJoystickX = function() {
-        return joystick.x;
+        return joystick.knobX;
     };
 
     ext.getJoystickY = function() {
-        return joystick.y;
+        return joystick.knobY;
     };
 
     ext.getJoystickDirection = function() {
@@ -86,23 +102,40 @@
     ext.resetJoystick = function() {
         joystick.reset();
         ext.penClear();
+        ext.penColor('black');
+        ext.penSize(2);
+        ext.penDown();
+        ext.penCircle(joystick.x, joystick.y, joystick.radius);
+        ext.penUp();
+        ext.penCircle(joystick.x, joystick.y, 5);
     };
+
+    // Update joystick position based on mouse movement
+    document.addEventListener('mousemove', function(event) {
+        joystick.update(event.clientX, event.clientY);
+    });
 
     // Extension descriptor
     var descriptor = {
         blocks: [
-            [' ', 'create joystick at x: %n y: %n with radius: %n', 'createJoystick', 100, 100, 50],
-            ['r', 'joystick distance', 'getJoystickDistance'],
-            ['r', 'joystick x', 'getJoystickX'],
-            ['r', 'joystick y', 'getJoystickY'],
-            ['r', 'joystick direction', 'getJoystickDirection'],
-            [' ', 'reset joystick', 'resetJoystick']
+            [' ', 'Pen down', 'penDown'],
+            [' ', 'Pen up', 'penUp'],
+            [' ', 'Set pen color to %s', 'penColor', 'black'],
+            [' ', 'Set pen size to %s', 'penSize', 2],
+            [' ', 'Stamp pen', 'penStamp'],
+            [' ', 'Clear pen', 'penClear'],
+            [' ', 'Create joystick at x: %n y: %n with radius: %n', 'createJoystick', 100, 100, 50],
+            ['r', 'Joystick distance', 'getJoystickDistance'],
+            ['r', 'Joystick X', 'getJoystickX'],
+            ['r', 'Joystick Y', 'getJoystickY'],
+            ['r', 'Joystick direction', 'getJoystickDirection'],
+            [' ', 'Reset joystick', 'resetJoystick'],
         ],
-        menus: {},
-        url: 'https://aminegm73.github.io/ScratchExtensions/Joystick%20scratch%20extension.js' // Replace with the URL of your extension's JavaScript file
+        url: 'https://www.example.com/scratch-joystick-extension', // Replace with your extension URL
+        displayName: 'Joystick Extension'
     };
 
-    // Register the extension with Scratch
-    ScratchExtensions.register('Joystick', descriptor, ext);
+    // Register the extension
+    ScratchExtensions.register('joystick', descriptor, ext);
+})(window.ScratchExtensions || (window.ScratchExtensions = {}));
 
-})({});
