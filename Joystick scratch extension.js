@@ -1,83 +1,108 @@
-(function (ext) {
-  // Define the joystick class
-  class Joystick {
-    constructor(x, y, radius) {
-      this.x = x; // X coordinate of the joystick
-      this.y = y; // Y coordinate of the joystick
-      this.radius = radius; // Radius of the joystick
-      this.direction = 0; // Direction of the joystick in degrees (0 to 360)
-      this.distance = 0; // Distance of the joystick from the center (0 to 1)
+(function(ext) {
+
+    // Joystick class
+    class Joystick {
+        constructor(x, y, radius) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.direction = 0;
+            this.distance = 0;
+        }
+
+        update(x, y) {
+            const deltaX = x - this.x;
+            const deltaY = y - this.y;
+            this.distance = Math.min(1, Math.sqrt(deltaX * deltaX + deltaY * deltaY) / this.radius);
+            this.direction = (Math.atan2(deltaY, deltaX) * 180 / Math.PI + 360) % 360;
+        }
+
+        reset() {
+            this.distance = 0;
+            this.direction = 0;
+        }
     }
 
-    update(x, y) {
-      // Update the joystick values based on the current touch/mouse position
-      const deltaX = x - this.x;
-      const deltaY = y - this.y;
-      this.distance = Math.min(1, Math.sqrt(deltaX * deltaX + deltaY * deltaY) / this.radius);
-      this.direction = (Math.atan2(deltaY, deltaX) * 180 / Math.PI + 360) % 360;
-    }
+    // Create a new instance of the Joystick class
+    const joystick = new Joystick(100, 100, 50); // Example: Joystick centered at (100, 100) with radius of 50 pixels
 
-    reset() {
-      // Reset the joystick values
-      this.distance = 0;
-      this.direction = 0;
-    }
-  }
+    // Pen extension blocks for drawing graphics
+    ext.penDown = function() {
+        window.penDown();
+    };
 
-  // Create a new instance of the Joystick class
-  const joystick = new Joystick(100, 100, 50); // Example: Joystick centered at (100, 100) with radius of 50 pixels
+    ext.penUp = function() {
+        window.penUp();
+    };
 
-  // Define the extension blocks
-  ext._getStatus = function () {
-    return { status: 2, msg: 'Ready' }; // Return the status of the extension
-  };
+    ext.penColor = function(color) {
+        window.penColor(color);
+    };
 
-  ext.createJoystick = function (x, y, radius) {
-    joystick.x = x; // Set the x coordinate of the joystick
-    joystick.y = y; // Set the y coordinate of the joystick
-    joystick.radius = radius; // Set the radius of the joystick
-    ext.penClear(); // Clear the pen to remove any previous joystick drawings
-    ext.penColor('#000000'); // Set the pen color to black
-    ext.penSize(2); // Set the pen size to 2 pixels
-    ext.penDown(); // Put the pen down to start drawing
-    ext.penStamp(); // Stamp the current sprite's image at the joystick position
-  };
+    ext.penSize = function(size) {
+        window.penSize(size);
+    };
 
-  ext.getJoystickDistance = function () {
-    return joystick.distance; // Return the distance of the joystick from the center
-  };
+    ext.penStamp = function() {
+        window.penStamp();
+    };
 
-  ext.getJoystickX = function () {
-    return joystick.x; // Return the x coordinate of the joystick
-  };
+    ext.penClear = function() {
+        window.penClear();
+    };
 
-  ext.getJoystickY = function () {
-    return joystick.y; // Return the y coordinate of the joystick
-  };
+    // Extension blocks for joystick functionality
+    ext._getStatus = function() {
+        return {status: 2, msg: 'Ready'};
+    };
 
-  ext.getJoystickDirection = function () {
-    return joystick.direction; // Return the direction of the joystick
-  };
+    ext.createJoystick = function(x, y, radius) {
+        joystick.x = x;
+        joystick.y = y;
+        joystick.radius = radius;
+        ext.penClear();
+        ext.penColor('black');
+        ext.penSize(2);
+        ext.penDown();
+        ext.penStamp();
+    };
 
-  ext.resetJoystick = function () {
-    joystick.reset(); // Reset the joystick values
-    ext.penClear(); // Clear the pen to remove the joystick drawing
-  };
+    ext.getJoystickDistance = function() {
+        return joystick.distance;
+    };
 
-  // Define the extension descriptors
-  var descriptor = {
-    blocks: [
-      [' ', 'create joystick at x: %n y: %n with radius: %n', 'createJoystick', 100, 100, 50],
-      ['r', 'joystick distance', 'getJoystickDistance'],
-      ['r', 'joystick x', 'getJoystickX'],
-      ['r', 'joystick y', 'getJoystickY'],
-      ['r', 'joystick direction', 'getJoystickDirection'],
-      [' ', 'resetjoystick', 'resetJoystick']
-    ],
-    url: 'https://aminegm73.github.io/ScratchExtensions/Joystick%20scratch%20extension.js' // Replace with the URL of your extension's JavaScript file
-  };
+    ext.getJoystickX = function() {
+        return joystick.x;
+    };
 
-  // Register the extension with Scratch
-  ScratchExtensions.register('Joystick', descriptor, ext);
+    ext.getJoystickY = function() {
+        return joystick.y;
+    };
+
+    ext.getJoystickDirection = function() {
+        return joystick.direction;
+    };
+
+    ext.resetJoystick = function() {
+        joystick.reset();
+        ext.penClear();
+    };
+
+    // Extension descriptor
+    var descriptor = {
+        blocks: [
+            [' ', 'create joystick at x: %n y: %n with radius: %n', 'createJoystick', 100, 100, 50],
+            ['r', 'joystick distance', 'getJoystickDistance'],
+            ['r', 'joystick x', 'getJoystickX'],
+            ['r', 'joystick y', 'getJoystickY'],
+            ['r', 'joystick direction', 'getJoystickDirection'],
+            [' ', 'reset joystick', 'resetJoystick']
+        ],
+        menus: {},
+        url: 'https://aminegm73.github.io/ScratchExtensions/Joystick%20scratch%20extension.js' // Replace with the URL of your extension's JavaScript file
+    };
+
+    // Register the extension with Scratch
+    ScratchExtensions.register('Joystick', descriptor, ext);
+
 })({});
-
