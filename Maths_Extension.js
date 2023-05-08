@@ -23,4 +23,4 @@
 
   // Register the extension
   ScratchExtensions.register('Math Extension', descriptor, ext);
-})({});  
+})();
