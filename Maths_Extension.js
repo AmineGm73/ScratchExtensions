@@ -1,28 +1,33 @@
-(function(ext) {
+class Randomizer {
+  getInfo() {
+    return {
+      id: 'randomizer',
+      name: 'Randomizer',
+      blocks: [
+        {
+          opcode: 'randomNumber',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'pick random number from [min] to [max]',
+          arguments: {
+            min: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 1
+            },
+            max: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 10
+            }
+          }
+        }
+      ]
+    };
+  }
 
-  // Constants
-  var DEG_TO_RAD = Math.PI / 180.0;
-  var RAD_TO_DEG = 180.0 / Math.PI;
+  randomNumber(args) {
+    const min = args.min;
+    const max = args.max;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+}
 
-  // Math.atan2: Returns the angle (in degrees) from the X-axis to a point.
-  ext.atan2 = function(y, x) {
-    return Math.atan2(y, x) * RAD_TO_DEG;
-  };
-
-  // Math.lerp: Performs linear interpolation between two values.
-  ext.lerp = function(start, end, t) {
-    return start + (end - start) * t;
-  };
-
-  // Block and block menu descriptions
-  var descriptor = {
-    blocks: [
-      ['r', 'atan2 of y: %n x: %n', 'atan2', 0, 0],
-      ['r', 'lerp start: %n end: %n t: %n', 'lerp', 0, 100, 0.5],
-    ]
-  };
-
-  // Register the extension
-  ScratchExtensions.register('Math Extension', descriptor, ext);
-
-})({});
+Scratch.extensions.register(new Randomizer());
