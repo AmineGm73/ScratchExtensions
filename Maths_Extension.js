@@ -1,22 +1,26 @@
 (function (ext) {
-  // Load external JavaScript file
-  var extensionUrl = 'https://aminegm73.github.io/ScratchExtensions/Maths_Extension.js';
-  var script = document.createElement('script');
-  script.src = extensionUrl;
-  document.head.appendChild(script);
+  // Constants
+  var DEG_TO_RAD = Math.PI / 180.0;
+  var RAD_TO_DEG = 180.0 / Math.PI;
 
-  // Cleanup function when the extension is unloaded
-  ext._shutdown = function () {
-    // Remove the dynamically added script element
-    document.head.removeChild(script);
+  // Math.atan2: Returns the angle (in degrees) from the X-axis to a point.
+  ext.atan2 = function (y, x) {
+    return Math.atan2(y, x) * RAD_TO_DEG;
   };
 
-  // Status reporting code
-  // Use this to report missing hardware, plugin or unsupported browser
-  ext._getStatus = function () {
-    return { status: 2, msg: 'Ready' };
+  // Math.lerp: Performs linear interpolation between two values.
+  ext.lerp = function (start, end, t) {
+    return start + (end - start) * t;
+  };
+
+  // Block and block menu descriptions
+  var descriptor = {
+    blocks: [
+      ['r', 'atan2 of y: %n x: %n', 'atan2', 0, 0],
+      ['r', 'lerp start: %n end: %n t: %n', 'lerp', 0, 100, 0.5],
+    ],
   };
 
   // Register the extension
-  ScratchExtensions.register('Math Extension', ext, { type: 'misc' });
-})({});
+  ScratchExtensions.register('Math Extension', descriptor, ext);
+})({});  
